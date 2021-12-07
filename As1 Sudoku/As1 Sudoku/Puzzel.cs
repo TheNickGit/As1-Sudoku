@@ -12,6 +12,7 @@ namespace As1_Sudoku
         public Puzzel()
         {
             vakjes = new int[9, 9];
+            VulPuzzel();
         }
 
         /// <summary>
@@ -19,11 +20,56 @@ namespace As1_Sudoku
         /// </summary>
         public void VulPuzzel()
         {
+            /*
             var rand = new Random();
             for(int r = 0; r < 9; r++)
                 for(int k = 0; k < 9; k++)
                 {
                     vakjes[r, k] = rand.Next(1, 9);
+                }
+            */
+            for (int vakIndex = 0; vakIndex < 9; vakIndex++)
+                VulVak(vakIndex);
+        }
+
+        /// <summary>
+        /// De indexen van de vakken zijn als volgt:
+        /// [0][1][2]
+        /// [3][4][5]
+        /// [6][7][8]
+        /// waarbij iedere vak 3x3 kleinere vakjes bevat.
+        /// </summary>
+        /// <param name="vakIndex"></param>
+        internal void VulVak(int vakIndex)
+        {
+            int vakRijIndex = (vakIndex / 3) * 3;
+            int vakKolomIndex = (vakIndex % 3) * 3;
+
+            // Check al ingevulde nummers op duplicaten te voorkomen.
+            List<int> beschikbareNummers = new List<int>();
+            for (int i = 1; i <= 9; i++)
+                beschikbareNummers.Add(i);
+            for (int r = vakRijIndex; r < vakRijIndex + 3; r++)
+                for (int k = vakKolomIndex; k < vakKolomIndex + 3; k++)
+                {
+                    int huidigNummer = vakjes[r, k];
+                    if (huidigNummer != 0 && beschikbareNummers.Contains(huidigNummer))
+                        beschikbareNummers.Remove(huidigNummer);
+                }
+
+            // Vul de overige vakjes in.
+            Random rand = new Random();
+            for (int r = vakRijIndex; r < vakRijIndex + 3; r++)
+                for (int k = vakKolomIndex; k < vakKolomIndex + 3; k++)
+                {
+                    int huidigNummer = vakjes[r, k];
+                    if (huidigNummer == 0)
+                    {
+                        int nieuwNummerIndex = rand.Next(0, beschikbareNummers.Count - 1);
+                        int nieuwNummer = beschikbareNummers[nieuwNummerIndex];
+                        beschikbareNummers.RemoveAt(nieuwNummerIndex);
+                        vakjes[r, k] = nieuwNummer;
+                    }
                 }
         }
 
