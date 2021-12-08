@@ -51,7 +51,6 @@ namespace As1_Sudoku
                     r++;
                     k = 0;
                 }
-
             }
         }
 
