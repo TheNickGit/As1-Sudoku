@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace As1_Sudoku
@@ -12,7 +13,46 @@ namespace As1_Sudoku
         public Puzzel()
         {
             vakjes = new int[9, 9];
-            VulPuzzel();
+            //VulPuzzel();
+        }
+
+        /// <summary>
+        /// Neemt een grid nummer en laadt de puzzel in die hierbij past.
+        /// Het voorbeeldbestand heeft 5 puzzels, waardoor de grid nummers lopen van 1 t/m 5.
+        /// </summary>
+        public void LaadSudoku(int gridNummer)
+        {
+            StreamReader reader = new StreamReader("Suduko_puzzels_5.txt");
+
+            // Gooi de eerste lijn weg. Verder, sla per gridnummer nog 2 lijnen over.
+            reader.ReadLine();
+            for (int i = 1; i < gridNummer; i++)
+            {
+                reader.ReadLine();
+                reader.ReadLine();
+            }
+
+            // Lees de lijn en vertaal het naar een array van integers.
+            string line = reader.ReadLine();
+            line = line.Trim();
+            string[] inputStr = line.Split(' ');
+            int[] inputInt = new int[inputStr.Length];
+            for (int i = 0; i < inputStr.Length; i++)
+                inputInt[i] = int.Parse(inputStr[i]);
+
+            // Vul de puzzel met de verkregen getallen.
+            int r = 0; int k = 0;
+            for (int i = 0; i < inputInt.Length; i++)
+            {
+                vakjes[r, k] = inputInt[i];
+                k++;
+                if (k == 9)
+                {
+                    r++;
+                    k = 0;
+                }
+
+            }
         }
 
         /// <summary>
@@ -20,14 +60,6 @@ namespace As1_Sudoku
         /// </summary>
         public void VulPuzzel()
         {
-            /*
-            var rand = new Random();
-            for(int r = 0; r < 9; r++)
-                for(int k = 0; k < 9; k++)
-                {
-                    vakjes[r, k] = rand.Next(1, 9);
-                }
-            */
             for (int vakIndex = 0; vakIndex < 9; vakIndex++)
                 VulVak(vakIndex);
         }

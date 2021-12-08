@@ -11,3 +11,4 @@ C:\Users\nvrie\OneDrive\Documenten\Visual Studio 2019\as1-sudoku\As1 Sudoku\As1 
 C:\Users\nvrie\OneDrive\Documenten\Visual Studio 2019\as1-sudoku\As1 Sudoku\As1 Sudoku\obj\Debug\netcoreapp3.1\As1 Sudoku.dll
 C:\Users\nvrie\OneDrive\Documenten\Visual Studio 2019\as1-sudoku\As1 Sudoku\As1 Sudoku\obj\Debug\netcoreapp3.1\As1 Sudoku.pdb
 C:\Users\nvrie\OneDrive\Documenten\Visual Studio 2019\as1-sudoku\As1 Sudoku\As1 Sudoku\obj\Debug\netcoreapp3.1\As1 Sudoku.genruntimeconfig.cache
+C:\Users\nvrie\OneDrive\Documenten\Visual Studio 2019\as1-sudoku\As1 Sudoku\As1 Sudoku\bin\Debug\netcoreapp3.1\Suduko_puzzels_5.txt
