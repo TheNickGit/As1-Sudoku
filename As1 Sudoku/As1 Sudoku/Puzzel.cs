@@ -9,11 +9,12 @@ namespace As1_Sudoku
     {
         // De puzzel wordt bepaald door een 3D array van 9 bij 9
         public int[,] vakjes;
+        public bool[,] fixeerdeVakjes;
 
         public Puzzel()
         {
             vakjes = new int[9, 9];
-            //VulPuzzel();
+            fixeerdeVakjes = new bool[9, 9];
         }
 
         /// <summary>
@@ -85,7 +86,11 @@ namespace As1_Sudoku
                 {
                     int huidigNummer = vakjes[r, k];
                     if (huidigNummer != 0 && beschikbareNummers.Contains(huidigNummer))
+                    {
                         beschikbareNummers.Remove(huidigNummer);
+                        fixeerdeVakjes[r, k] = true;
+                    }
+                        
                 }
 
             // Vul de overige vakjes in.
@@ -121,6 +126,21 @@ namespace As1_Sudoku
                 if (r == 2 || r == 5)
                     Console.WriteLine("---------+---------+---------");
             }
+        }
+
+        /// <summary>
+        /// Bereken the heuristische waarde van de huidige probleemtoestand.
+        /// </summary>
+        /// <returns></returns>
+        public int BerekenHeuristischeWaarde()
+        {
+            int heuristischeWaarde = 0;
+            for (int r = 0; r < 9; r++)
+                heuristischeWaarde += CheckRij(r);
+            for (int k = 0; k < 9; k++)
+                heuristischeWaarde += CheckKolom(k);
+
+            return heuristischeWaarde;
         }
 
         /// <summary>
