@@ -11,10 +11,16 @@ namespace As1_Sudoku
         public int[,] vakjes;
         public bool[,] fixeerdeVakjes;
 
-        public Puzzel()
+        public Puzzel(int[,] inputVakjes = null, bool[,] inputFixeerdeVakjes = null)
         {
-            vakjes = new int[9, 9];
-            fixeerdeVakjes = new bool[9, 9];
+            if (inputVakjes == null)
+                vakjes = new int[9, 9];
+            else
+                vakjes = inputVakjes;
+            if (inputFixeerdeVakjes == null)
+                fixeerdeVakjes = new bool[9, 9];
+            else
+                fixeerdeVakjes = inputFixeerdeVakjes;
         }
 
         /// <summary>
@@ -101,7 +107,7 @@ namespace As1_Sudoku
                     int huidigNummer = vakjes[r, k];
                     if (huidigNummer == 0)
                     {
-                        int nieuwNummerIndex = rand.Next(0, beschikbareNummers.Count - 1);
+                        int nieuwNummerIndex = rand.Next(0, beschikbareNummers.Count);
                         int nieuwNummer = beschikbareNummers[nieuwNummerIndex];
                         beschikbareNummers.RemoveAt(nieuwNummerIndex);
                         vakjes[r, k] = nieuwNummer;
@@ -126,6 +132,66 @@ namespace As1_Sudoku
                 if (r == 2 || r == 5)
                     Console.WriteLine("---------+---------+---------");
             }
+        }
+
+        /// <summary>
+        /// Kies een willekeurig vak en test alle mogelijke wissels.
+        /// Kies degene met de beste verbetering (i.e., de laagste heuristische waarde).
+        /// </summary>
+        public List<Puzzel> GenereerToestanden()
+        {
+            Random rand = new Random();
+            int vakIndex = rand.Next(0, 9);
+            Console.WriteLine("VakIndex: " + vakIndex);
+
+            int vakRijIndex = (vakIndex / 3) * 3;
+            int vakKolomIndex = (vakIndex % 3) * 3;
+
+            List<Puzzel> toestanden = new List<Puzzel>();
+
+            // Ga de nummers langs in het gekozen vak.
+            for (int huidigVakjeIndex = 0; huidigVakjeIndex < 9; huidigVakjeIndex++)
+            {
+                int huidigeRijIndex = (huidigVakjeIndex / 3) + vakRijIndex;
+                int huidigeKolomIndex = (huidigVakjeIndex % 3) + vakKolomIndex;
+
+                // Als het huidige vakje gefixeerd is, sla hem over.
+                if (fixeerdeVakjes[huidigeRijIndex, huidigeKolomIndex])
+                    continue;
+
+                // Pak alle toekomstige vakjes een voor een, check of het gefixeerde vakjes zijn,
+                // en genereer een nieuwe toestand wanneer dit niet zo is.
+                for (int wisselVakjeIndex = huidigVakjeIndex; wisselVakjeIndex < 9; wisselVakjeIndex++)
+                {
+                    int wisselRijIndex = (wisselVakjeIndex / 3) + vakRijIndex;
+                    int wisselKolomIndex = (wisselVakjeIndex % 3) + vakKolomIndex;
+
+                    if (fixeerdeVakjes[wisselRijIndex, wisselKolomIndex])
+                        continue;
+
+                    // Zijn de vakjes niet gefixeerd, genereer een nieuwe toestand.
+                    int[,] nVakjes = KopieerToestand();
+                    nVakjes[huidigeRijIndex, huidigeKolomIndex] = vakjes[wisselRijIndex, wisselKolomIndex];
+                    nVakjes[wisselRijIndex, wisselKolomIndex] = vakjes[huidigeRijIndex, huidigeKolomIndex];
+                    Puzzel toestand = new Puzzel(nVakjes, fixeerdeVakjes);
+
+                    if (toestand.BerekenHeuristischeWaarde() <= BerekenHeuristischeWaarde())
+                        toestanden.Add(toestand);
+                }
+            }
+
+            // Kopieer de huidige toestand in een nieuwe 3D int array.
+            int[,] KopieerToestand()
+            {
+                int[,] toestand = new int[9, 9];
+                for (int r = 0; r < 9; r++)
+                    for (int k = 0; k < 9; k++)
+                        toestand[r, k] = vakjes[r, k];
+
+                return toestand;
+            }
+
+            return toestanden;
         }
 
         /// <summary>
