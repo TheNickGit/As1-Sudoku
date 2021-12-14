@@ -194,6 +194,29 @@ namespace As1_Sudoku
             return toestanden;
         }
 
+        public void RandomWalk()
+        {
+            Random rand = new Random();
+            int vakIndex = rand.Next(0, 9);
+
+            // Genereer indexen voor de twee vakjes die verwisselt gaan worden.
+            // De vakindex zorgt ervoor dat de twee vakjes onderdeel zijn van hetzelfde 3x3 vak.
+            int rijIndex1 = (vakIndex / 3) * 3 + rand.Next(0, 3);
+            int kolomIndex1 = (vakIndex % 3) * 3 + rand.Next(0, 3);
+            int rijIndex2 = (vakIndex / 3) * 3 + rand.Next(0, 3);
+            int kolomIndex2 = (vakIndex % 3) * 3 + rand.Next(0, 3);
+
+            if (fixeerdeVakjes[rijIndex1, kolomIndex1] || fixeerdeVakjes[rijIndex2, kolomIndex2])
+                RandomWalk();
+            else
+            {
+                int temp = vakjes[rijIndex1, kolomIndex1];
+                vakjes[rijIndex1, kolomIndex1] = vakjes[rijIndex2, kolomIndex2];
+                vakjes[rijIndex2, kolomIndex2] = temp;
+            }
+
+        }
+
         /// <summary>
         /// Bereken the heuristische waarde van de huidige probleemtoestand.
         /// </summary>

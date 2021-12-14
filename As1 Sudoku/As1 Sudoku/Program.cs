@@ -7,6 +7,9 @@ namespace As1_Sudoku
     {
         static void Main()
         {
+            int maximaleStagnatie = 30;
+            int aantalRandomVakjes = 2;
+
             Puzzel p = new Puzzel();
             p.LaadSudoku(1);
             Console.WriteLine("Initiële puzzel:");
@@ -18,16 +21,36 @@ namespace As1_Sudoku
             p.PrintPuzzel();
             Console.WriteLine(p.BerekenHeuristischeWaarde());
 
-            int iteratie = 0;
+            
             // De loop van het algoritme.
+            int iteratie = 0;
+            int huidigeStagnatie = 0;
             while (p.BerekenHeuristischeWaarde() != 0)
+            //for(int f = 0; f < 30; f++)
             {
+                int oudeHeuristischeWaarde = p.BerekenHeuristischeWaarde();
                 p = HillClimbing(p);
                 Console.WriteLine("Puzzel #" + iteratie + " - Heuristische waarde: " + p.BerekenHeuristischeWaarde());
                 p.PrintPuzzel();
+                if (oudeHeuristischeWaarde == p.BerekenHeuristischeWaarde())
+                    huidigeStagnatie++;
+
+                if (huidigeStagnatie == maximaleStagnatie)
+                {
+                    for (int i = 0; i < aantalRandomVakjes; i++)
+                        p.RandomWalk();
+                    huidigeStagnatie = 0;
+                }
+                //f++;
                 iteratie++;
             }
-
+            
+            /*
+            Console.WriteLine();
+            p.RandomWalk(); p.PrintPuzzel(); Console.WriteLine(p.BerekenHeuristischeWaarde() + "\n");
+            p.RandomWalk(); p.PrintPuzzel(); Console.WriteLine(p.BerekenHeuristischeWaarde() + "\n");
+            p.RandomWalk(); p.PrintPuzzel(); Console.WriteLine(p.BerekenHeuristischeWaarde() + "\n");
+            */
             Console.WriteLine("Gevonden oplossing:");
             p.PrintPuzzel();
             Console.WriteLine("Heuristische waarde check: " + p.BerekenHeuristischeWaarde());
