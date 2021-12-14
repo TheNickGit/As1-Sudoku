@@ -18,19 +18,29 @@ namespace As1_Sudoku
             p.PrintPuzzel();
             Console.WriteLine(p.BerekenHeuristischeWaarde());
 
-            /*
-            for(int r = 0; r < 9; r++)
-                Console.WriteLine("Check op rij " + r + ": " + p.CheckRij(r));
-            for (int k = 0; k < 9; k++)
-                Console.WriteLine("Check op kolom: " + k + ": " + p.CheckKolom(k));            
+            int iteratie = 0;
+            // De loop van het algoritme.
+            while (p.BerekenHeuristischeWaarde() != 0)
+            {
+                p = HillClimbing(p);
+                Console.WriteLine("Puzzel #" + iteratie + " - Heuristische waarde: " + p.BerekenHeuristischeWaarde());
+                p.PrintPuzzel();
+                iteratie++;
+            }
 
-            Console.WriteLine("Heuristische waarde: " + p.BerekenHeuristischeWaarde());
-            */
+            Console.WriteLine("Gevonden oplossing:");
+            p.PrintPuzzel();
+            Console.WriteLine("Heuristische waarde check: " + p.BerekenHeuristischeWaarde());
+            Console.Read();
+        }
 
-            Console.WriteLine("\nGegenereerde toestanden:");
+        public static Puzzel HillClimbing(Puzzel p)
+        {
+            //Console.WriteLine("\nGegenereerde toestanden:");
             List<Puzzel> toestanden = p.GenereerToestanden();
             Console.WriteLine("Aantal toestanden: " + toestanden.Count);
 
+            /*
             // Print de verkregen toestanden.
             for (int i = 0; i < toestanden.Count; i++)
             {
@@ -38,12 +48,14 @@ namespace As1_Sudoku
                 Console.WriteLine(toestanden[i].BerekenHeuristischeWaarde());
                 Console.WriteLine();
             }
+            */
 
             // Verkrijg de beste toestand.
             int minHeuristischeWaarde = p.BerekenHeuristischeWaarde();
             int minIndex = -1;
             for (int i = 0; i < toestanden.Count; i++)
             {
+                /*
                 // Print de puzzel als deze de doeltoestand is.
                 if (toestanden[i].BerekenHeuristischeWaarde() == 0)
                 {
@@ -51,6 +63,7 @@ namespace As1_Sudoku
                     toestanden[i].PrintPuzzel();
                     Console.WriteLine("Check h-waarde: " + toestanden[i].BerekenHeuristischeWaarde());
                 }
+                */
 
                 // Verkrijg de index van de beste puzzel.
                 if (toestanden[i].BerekenHeuristischeWaarde() <= minHeuristischeWaarde)
@@ -65,12 +78,12 @@ namespace As1_Sudoku
             else
                 throw new Exception("Er zijn geen toestanden gegenereerd.");
 
+            /*
             Console.WriteLine("BESTE PUZZEL:");
             p.PrintPuzzel();
             Console.WriteLine(p.BerekenHeuristischeWaarde());
-
-
-            Console.Read();
+            */
+            return p;
         }
     }
 }

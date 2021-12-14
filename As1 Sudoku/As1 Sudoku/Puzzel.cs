@@ -142,7 +142,7 @@ namespace As1_Sudoku
         {
             Random rand = new Random();
             int vakIndex = rand.Next(0, 9);
-            Console.WriteLine("VakIndex: " + vakIndex);
+            //Console.WriteLine("VakIndex: " + vakIndex);
 
             int vakRijIndex = (vakIndex / 3) * 3;
             int vakKolomIndex = (vakIndex % 3) * 3;
