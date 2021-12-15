@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace As1_Sudoku
 {
@@ -11,6 +10,11 @@ namespace As1_Sudoku
         public int[,] vakjes;
         public bool[,] fixeerdeVakjes;
 
+        /// <summary>
+        /// De Constructor van Puzzel.
+        /// Maak een lege puzzel aan (gevuld met 0en) als er geen arrays gepasseerd worden.
+        /// Wordt dit wel gedaan, dan wordt hiermee de puzzel aangemaakt.
+        /// </summary>
         public Puzzel(int[,] inputVakjes = null, bool[,] inputFixeerdeVakjes = null)
         {
             if (inputVakjes == null)
@@ -71,24 +75,23 @@ namespace As1_Sudoku
         }
 
         /// <summary>
-        /// De indexen van de vakken zijn als volgt:
+        /// De indexen van de blokken zijn als volgt:
         /// [0][1][2]
         /// [3][4][5]
         /// [6][7][8]
-        /// waarbij iedere vak 3x3 kleinere vakjes bevat.
+        /// waarbij iedere blok 3x3 kleinere vakjes bevat.
         /// </summary>
-        /// <param name="vakIndex"></param>
         internal void VulVak(int vakIndex)
         {
-            int vakRijIndex = (vakIndex / 3) * 3;
-            int vakKolomIndex = (vakIndex % 3) * 3;
+            int blokRijIndex = (vakIndex / 3) * 3;
+            int blokKolomIndex = (vakIndex % 3) * 3;
 
             // Check al ingevulde nummers op duplicaten te voorkomen.
             List<int> beschikbareNummers = new List<int>();
             for (int i = 1; i <= 9; i++)
                 beschikbareNummers.Add(i);
-            for (int r = vakRijIndex; r < vakRijIndex + 3; r++)
-                for (int k = vakKolomIndex; k < vakKolomIndex + 3; k++)
+            for (int r = blokRijIndex; r < blokRijIndex + 3; r++)
+                for (int k = blokKolomIndex; k < blokKolomIndex + 3; k++)
                 {
                     int huidigNummer = vakjes[r, k];
                     if (huidigNummer != 0 && beschikbareNummers.Contains(huidigNummer))
@@ -101,8 +104,8 @@ namespace As1_Sudoku
 
             // Vul de overige vakjes in.
             Random rand = new Random();
-            for (int r = vakRijIndex; r < vakRijIndex + 3; r++)
-                for (int k = vakKolomIndex; k < vakKolomIndex + 3; k++)
+            for (int r = blokRijIndex; r < blokRijIndex + 3; r++)
+                for (int k = blokKolomIndex; k < blokKolomIndex + 3; k++)
                 {
                     int huidigNummer = vakjes[r, k];
                     if (huidigNummer == 0)
@@ -135,25 +138,24 @@ namespace As1_Sudoku
         }
 
         /// <summary>
-        /// Kies een willekeurig vak en test alle mogelijke wissels.
-        /// Kies degene met de beste verbetering (i.e., de laagste heuristische waarde).
+        /// Kies een willekeurig blok en test alle mogelijke wissels.
+        /// Kiest alleen toestanden uit met een verbetering verbetering (i.e., een lagere heuristische waarde).
         /// </summary>
         public List<Puzzel> GenereerToestanden()
         {
             Random rand = new Random();
             int vakIndex = rand.Next(0, 9);
-            //Console.WriteLine("VakIndex: " + vakIndex);
 
-            int vakRijIndex = (vakIndex / 3) * 3;
-            int vakKolomIndex = (vakIndex % 3) * 3;
+            int blokRijIndex = (vakIndex / 3) * 3;
+            int blokKolomIndex = (vakIndex % 3) * 3;
 
             List<Puzzel> toestanden = new List<Puzzel>();
 
             // Ga de nummers langs in het gekozen vak.
             for (int huidigVakjeIndex = 0; huidigVakjeIndex < 9; huidigVakjeIndex++)
             {
-                int huidigeRijIndex = (huidigVakjeIndex / 3) + vakRijIndex;
-                int huidigeKolomIndex = (huidigVakjeIndex % 3) + vakKolomIndex;
+                int huidigeRijIndex = (huidigVakjeIndex / 3) + blokRijIndex;
+                int huidigeKolomIndex = (huidigVakjeIndex % 3) + blokKolomIndex;
 
                 // Als het huidige vakje gefixeerd is, sla hem over.
                 if (fixeerdeVakjes[huidigeRijIndex, huidigeKolomIndex])
@@ -163,8 +165,8 @@ namespace As1_Sudoku
                 // en genereer een nieuwe toestand wanneer dit niet zo is.
                 for (int wisselVakjeIndex = huidigVakjeIndex; wisselVakjeIndex < 9; wisselVakjeIndex++)
                 {
-                    int wisselRijIndex = (wisselVakjeIndex / 3) + vakRijIndex;
-                    int wisselKolomIndex = (wisselVakjeIndex % 3) + vakKolomIndex;
+                    int wisselRijIndex = (wisselVakjeIndex / 3) + blokRijIndex;
+                    int wisselKolomIndex = (wisselVakjeIndex % 3) + blokKolomIndex;
 
                     if (fixeerdeVakjes[wisselRijIndex, wisselKolomIndex])
                         continue;
@@ -194,6 +196,9 @@ namespace As1_Sudoku
             return toestanden;
         }
 
+        /// <summary>
+        /// Verwissel twee willekeurige niet-gefixeerde cijfers in hetzelfde vak, ongeacht van heuristische waarde.
+        /// </summary>
         public void RandomWalk()
         {
             Random rand = new Random();
