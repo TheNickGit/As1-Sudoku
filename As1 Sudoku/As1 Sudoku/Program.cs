@@ -10,9 +10,10 @@ namespace As1_Sudoku
             // Config:
             // Bepaalt het aantal iteraties dat het algoritme op dezelfde heuristische waarde
             // kan vastzitten voordat een aantal (niet gefixeerde) vakjes willekeurig gewisseld worden
-            // ongeacht van verbetering. 20 en 4 zijn hier door testen als goede waardes uit gekomen.
-            int maximaleStagnatie = 20;
-            int aantalRandomVakjes = 4;
+            // ongeacht van verbetering. 12 en 2 zijn hier door testen als goede waardes uit gekomen.
+            // 20 en 4 leveren vergelijkbare resultaten op, maar andere waarden dan dit zorgt voor aanzienlijke vertragingen.
+            int maximaleStagnatie = 12;
+            int aantalRandomVakjes = 2;
 
             // Geeft groep informatie weer.
             Console.WriteLine("Welkom bij de implementatie van Iterated Local Search van groep 47.");
@@ -97,8 +98,6 @@ namespace As1_Sudoku
             // Zet de huidige toestand naar de best gevonden toestand.
             if (minIndex != -1)
                 p = toestanden[minIndex];
-            else
-                throw new Exception("Er zijn geen toestanden gegenereerd.");
 
             return p;
         }

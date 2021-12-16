@@ -219,7 +219,6 @@ namespace As1_Sudoku
                 vakjes[rijIndex1, kolomIndex1] = vakjes[rijIndex2, kolomIndex2];
                 vakjes[rijIndex2, kolomIndex2] = temp;
             }
-
         }
 
         /// <summary>
